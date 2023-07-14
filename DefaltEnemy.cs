@@ -6,15 +6,13 @@ public class DefaltEnemy : MonoBehaviour
 {
     Rigidbody2D RigSpirtDefalt;
     public GameObject RayMoveSpiritDefalt;
-    public bool terrestre;
+    public bool terrestre,saltitante,Direita;
     SpriteRenderer SpriteSpiritDefalt;
     public float SpiritDefaltSpeed,RangePlayer;
     private GameObject Player,GameController;
-    bool Direita;
     // Start is called before the first frame update
     void Start()
     {
-        Direita = false;
         RigSpirtDefalt = GetComponent<Rigidbody2D>();
         SpriteSpiritDefalt = GetComponent<SpriteRenderer>();
         Player = GameObject.FindGameObjectWithTag("Player");
@@ -30,6 +28,32 @@ public class DefaltEnemy : MonoBehaviour
         {
             SpiritDefaltFly();
         }
+        if (saltitante)
+            SpiritDefaltJumper();
+
+    }
+    void SpiritDefaltJumper()
+    {
+        if (transform.rotation.y != 0)
+        {
+            Direita = false;
+        }
+        else
+            Direita = true;
+        RaycastHit2D hitPlayer;
+        if (Direita == true)
+            hitPlayer = Physics2D.Raycast(RayMoveSpiritDefalt.transform.position, Vector2.right);
+        else
+            hitPlayer = Physics2D.Raycast(RayMoveSpiritDefalt.transform.position, Vector2.left);
+        if (hitPlayer.collider.tag == "Player" && RigSpirtDefalt.velocity.y == 0 && hitPlayer.distance < 5f)
+        {
+            if (Direita == true)
+                RigSpirtDefalt.AddForce(new Vector2(1f, 5f), (ForceMode2D.Impulse));
+            else
+                RigSpirtDefalt.AddForce(new Vector2(-1f, 5f), (ForceMode2D.Impulse));
+
+        }
+
     }
     void SpiritDefaltFly()
     {
@@ -37,6 +61,7 @@ public class DefaltEnemy : MonoBehaviour
         {
             transform.position = Vector2.MoveTowards(transform.position, Player.transform.position, SpiritDefaltSpeed * Time.deltaTime);
         }
+        
     }
     void SpiritDefaltMove()
     {
@@ -67,7 +92,7 @@ public class DefaltEnemy : MonoBehaviour
         {
             GameController.GetComponent<GameController>().GanharAlmas(1);
             SpriteSpiritDefalt.color = Color.red;
-            Destroy(gameObject,0.5f);
+            Destroy(gameObject,0.25f);
         }
     }
 }

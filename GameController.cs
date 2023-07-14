@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour
 {
     static int souls,Life;
     public Text Soulstext,LifeText;
     private GameObject Player;
+    public GameObject GameOver;
     void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-        souls = 0;
-        Life = 5;
+        if(SceneManager.GetActiveScene().name == "SampleScene")
+        {
+            Life = 5;
+            souls = 0;
+        }
     }
     public void PerderVida(int Dano)
     {
@@ -30,6 +35,7 @@ public class GameController : MonoBehaviour
         {
             Player.GetComponent<SpriteRenderer>().color = Color.red;
             Destroy(Player, 0.5f);
+            GameOver.SetActive(true);
         }
     }
 }
