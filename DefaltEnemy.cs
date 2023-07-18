@@ -92,7 +92,7 @@ public class DefaltEnemy : MonoBehaviour
         {
             GameController.GetComponent<GameController>().GanharAlmas(1);
             SpriteSpiritDefalt.color = Color.red;
-            Destroy(gameObject,0.25f);
+            Destroy(gameObject,0.15f);
         }
     }
 }

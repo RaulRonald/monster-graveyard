@@ -29,6 +29,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(souls == 15)
+        {
+            Life++;
+            souls = 0;
+        }
         Soulstext.text = "SOULS: " + souls.ToString();
         LifeText.text = "LIFES: " + Life.ToString();
         if(Life <= 0)
