@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 public class Coveira : MonoBehaviour
 {
-    public float velocidade, forcapulo;
+    public float velocidade, forcapulo,DefVel;
     Rigidbody2D RigCoveira;
-    private bool pulando,atacando;
+    public bool pulando,atacando;
+    public bool ThatsMobile;
     public GameObject RayGroundCoveira, CorrentePrefab,GameController;
     Animator anime;
     void Start()
@@ -32,11 +33,19 @@ public class Coveira : MonoBehaviour
             GameController.GetComponent<GameController>().PerderVida(1);
         }
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Bullet")
+        {
+            GameController.GetComponent<GameController>().PerderVida(1);
+        }
+    }
     void AtkCoveira()
     {
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z) || gameObject.GetComponent<MobileControls>().fire)
         {
+            gameObject.GetComponent<MobileControls>().fire = false;
             anime.SetTrigger("Atacando");
             if (transform.eulerAngles.y == 0)
             {
@@ -62,17 +71,19 @@ public class Coveira : MonoBehaviour
     }
     void MoveCoveira()
     {
-
-        RigCoveira.velocity = new Vector2(Input.GetAxis("Horizontal") * velocidade, RigCoveira.velocity.y);
+        if(!ThatsMobile)
+        DefVel = Input.GetAxis("Horizontal");
+        RigCoveira.velocity = new Vector2(DefVel * velocidade, RigCoveira.velocity.y);
     }
     void JumpCoveira()
     {
         RaycastHit2D hitGround = Physics2D.Raycast(RayGroundCoveira.transform.position, -Vector2.up);
-        if (Input.GetKeyDown(KeyCode.Space) && pulando == false)
+        if ((Input.GetKeyDown(KeyCode.Space) || gameObject.GetComponent<MobileControls>().jump) && pulando == false)
         {
             RigCoveira.AddForce(new Vector2(0, forcapulo), (ForceMode2D.Impulse));
+            gameObject.GetComponent<MobileControls>().jump = false;
         }
-        if(hitGround.distance <= 0.5)
+        if(hitGround.distance <= 0.25)
             pulando = false;
             else
         if (hitGround.distance > 0.5)
@@ -87,15 +98,15 @@ public class Coveira : MonoBehaviour
         }
         else
             anime.SetBool("Pulando", false);
-        if(Input.GetAxis("Horizontal") != 0)
+        if(DefVel != 0)
         {
             anime.SetBool("Andando", true);
-            if (Input.GetAxis("Horizontal") < 0)
+            if (DefVel < 0)
             {
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180, transform.eulerAngles.z);
             }
             else
-            if (Input.GetAxis("Horizontal") > 0)
+            if (DefVel > 0)
             {
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
             }

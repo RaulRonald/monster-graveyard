@@ -73,7 +73,12 @@ public class DefaltEnemy : MonoBehaviour
         else
         hitWall = Physics2D.Raycast(RayMoveSpiritDefalt.transform.position, Vector2.left);
         Debug.DrawRay(RayMoveSpiritDefalt.transform.position, Vector2.right * hitWall.distance);
-        if ((hitWall.distance <= 0.5 || hitGround.distance > 1) && hitWall.collider.tag != "Player") {
+        Debug.DrawRay(RayMoveSpiritDefalt.transform.position, Vector2.down * hitGround.distance);
+        if(hitGround.distance > 1f)
+        {
+            Debug.Log("colidindo");
+        }
+        if (hitGround.distance >= 1f || (hitWall.distance <= 0.5 && hitWall.collider.tag != "Player" && hitWall.collider.tag != "Ataque" )) {
             SpiritDefaltSpeed = SpiritDefaltSpeed * -1;
             if (transform.rotation.y != 0) {
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);

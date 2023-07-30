@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
         if(SceneManager.GetActiveScene().name == "SampleScene")
         {
-            Life = 5;
+            Life = 2;
             souls = 0;
         }
     }
